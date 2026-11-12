@@ -1,0 +1,718 @@
+<title>The Hidden Abode</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a single factory-floor column; the 10-hour working day bar is the recurring motif (red = paid labor, brass = surplus labor). */
+:root {
+  --bg: #ECEEF2;
+  --surface: #FFFFFF;
+  --sunk: #E2E6EC;
+  --ink: #1A1E28;
+  --muted: #586174;
+  --line: #CDD3DD;
+  --red: #B3261E;
+  --red-soft: #F6DEDC;
+  --brass: #9A6B12;
+  --brass-soft: #F3E6C8;
+  --good: #22744A;
+  --good-soft: #D8EFE2;
+  --bad: #B3261E;
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --radius: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11141B; --surface: #1A1F29; --sunk: #232936; --ink: #E8EBF1; --muted: #9AA3B4; --line: #2E3644;
+    --red: #EC5A50; --red-soft: #3A1E1D; --brass: #D9A843; --brass-soft: #3A2F18; --good: #4CC285; --good-soft: #17352A; --bad: #EC5A50;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11141B; --surface: #1A1F29; --sunk: #232936; --ink: #E8EBF1; --muted: #9AA3B4; --line: #2E3644;
+  --red: #EC5A50; --red-soft: #3A1E1D; --brass: #D9A843; --brass-soft: #3A2F18; --good: #4CC285; --good-soft: #17352A; --bad: #EC5A50;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--ink); }
+body { font-family: var(--body); font-size: 16px; line-height: 1.55; }
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 24px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; line-height: 1; margin: 0; letter-spacing: .01em; }
+h1 { font-size: clamp(3rem, 9vw, 5.6rem); font-weight: 900; text-transform: uppercase; }
+h2 { font-size: 2rem; font-weight: 800; text-transform: uppercase; }
+h3 { font-size: 1.35rem; font-weight: 800; text-transform: uppercase; }
+p { margin: 0; }
+.eyebrow { font-family: var(--mono); font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.mono { font-family: var(--mono); }
+.muted { color: var(--muted); }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--brass); outline-offset: 2px; }
+
+/* Hero */
+header.hero { display: grid; gap: 14px; padding-bottom: 22px; }
+.hero .lede { max-width: 62ch; font-size: 1.05rem; color: var(--muted); }
+.daybar { display: grid; gap: 6px; }
+.day { display: flex; height: 44px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); }
+.day .seg { display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: .8rem; font-weight: 600; transition: flex-grow .4s ease; min-width: 0; white-space: nowrap; overflow: hidden; }
+.seg.need { background: var(--red); color: #fff; }
+.seg.surp { background: var(--brass); color: #fff; }
+:root[data-theme="dark"] .seg.surp, :root[data-theme="dark"] .seg.need { color: #11141B; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .seg.surp, :root:not([data-theme="light"]) .seg.need { color: #11141B; } }
+.ticks { display: flex; justify-content: space-between; font-family: var(--mono); font-size: .7rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .85rem; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+
+/* Tabs */
+nav.tabs { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); display: flex; gap: 4px; overflow-x: auto; border-bottom: 2px solid var(--ink); margin-bottom: 24px; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+nav.tabs button { background: none; border: 0; padding: 12px 14px 10px; font-family: var(--display); font-weight: 800; font-size: 1.15rem; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); border-bottom: 4px solid transparent; margin-bottom: -2px; white-space: nowrap; }
+nav.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--red); }
+section[role="tabpanel"] { display: grid; gap: 20px; }
+
+/* Study */
+.ideas { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.idea { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.idea .eyebrow { color: var(--red); }
+.idea ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.formula { font-family: var(--mono); background: var(--sunk); border-radius: 4px; padding: 2px 6px; font-size: .9em; white-space: nowrap; }
+.callout { border-left: 4px solid var(--brass); background: var(--brass-soft); padding: 14px 16px; border-radius: 0 var(--radius) var(--radius) 0; }
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--sunk); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); }
+tr:last-child td { border-bottom: 0; }
+
+/* Lab */
+.lab { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
+@media (max-width: 720px) { .lab { grid-template-columns: 1fr; } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.slider { display: grid; gap: 4px; }
+.slider label { display: flex; justify-content: space-between; font-weight: 500; }
+.slider output { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+input[type="range"] { width: 100%; accent-color: var(--red); }
+.stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.stat { background: var(--sunk); border-radius: var(--radius); padding: 12px; display: grid; gap: 2px; }
+.stat b { font-family: var(--display); font-size: 2rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat span { font-size: .8rem; color: var(--muted); }
+.stat.hl { background: var(--red-soft); }
+.stat.hl b { color: var(--red); }
+.seg-toggle { display: inline-flex; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.seg-toggle button { background: var(--surface); border: 0; padding: 8px 14px; font-weight: 600; }
+.seg-toggle button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.up { color: var(--good); } .down { color: var(--bad); }
+
+/* Flashcards */
+.fc-stage { display: grid; gap: 14px; justify-items: center; }
+.flash { width: 100%; max-width: 560px; min-height: 230px; perspective: 1200px; background: none; border: 0; padding: 0; }
+.flash-inner { position: relative; width: 100%; min-height: 230px; transition: transform .5s ease; transform-style: preserve-3d; }
+.flash.flipped .flash-inner { transform: rotateY(180deg); }
+.face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 10px; padding: 26px; display: grid; place-content: center; gap: 10px; text-align: center; border: 1px solid var(--line); }
+.face.front { background: var(--surface); }
+.face.front .term { font-family: var(--display); font-size: 2.4rem; font-weight: 800; text-transform: uppercase; line-height: 1.05; }
+.face.back { background: var(--ink); color: var(--bg); transform: rotateY(180deg); font-size: 1.05rem; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: center; }
+.btn { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 16px; font-weight: 600; }
+.btn:hover { border-color: var(--ink); }
+.btn.primary { background: var(--red); border-color: var(--red); color: #fff; }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+
+/* Game */
+.setup { display: grid; gap: 18px; max-width: 640px; }
+.field { display: grid; gap: 6px; }
+.field > span { font-weight: 600; }
+input[type="text"] { font: inherit; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--ink); width: 100%; }
+.names { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 520px) { .names { grid-template-columns: 1fr; } }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 14px; font-weight: 600; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.board { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.pl { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 2px; }
+.pl.active { border-color: var(--red); box-shadow: 0 0 0 2px var(--red) inset; }
+.pl .nm { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pl .sc { font-family: var(--display); font-weight: 800; font-size: 1.9rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.turn { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px; display: grid; gap: 16px; }
+.turn-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.decks { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+.deck { text-align: left; background: var(--sunk); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: grid; gap: 4px; }
+.deck:hover:not(:disabled) { border-color: var(--ink); }
+.deck b { font-family: var(--display); font-size: 1.3rem; text-transform: uppercase; font-weight: 800; }
+.deck small { color: var(--muted); }
+.circuits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 520px) { .circuits { grid-template-columns: 1fr; } }
+.circuit { text-align: left; border-radius: 10px; padding: 16px; border: 2px solid var(--line); background: var(--surface); display: grid; gap: 6px; }
+.circuit .f { font-family: var(--mono); font-size: 1.5rem; font-weight: 600; }
+.circuit.safe .f { color: var(--red); }
+.circuit.risk .f { color: var(--brass); }
+.circuit:hover { border-color: var(--ink); }
+.q { font-size: 1.2rem; font-weight: 500; max-width: 60ch; }
+.opts { display: grid; gap: 8px; }
+.opt { text-align: left; background: var(--sunk); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: flex; gap: 12px; align-items: baseline; }
+.opt .k { font-family: var(--mono); font-weight: 600; color: var(--muted); }
+.opt:hover:not(:disabled) { border-color: var(--ink); }
+.opt.right { background: var(--good-soft); border-color: var(--good); }
+.opt.wrong { background: var(--red-soft); border-color: var(--bad); }
+.opt:disabled { cursor: default; }
+.verdict { border-radius: var(--radius); padding: 14px 16px; display: grid; gap: 6px; }
+.verdict.ok { background: var(--good-soft); }
+.verdict.no { background: var(--red-soft); }
+.verdict strong { font-family: var(--display); font-size: 1.5rem; text-transform: uppercase; }
+.event { border: 2px dashed var(--brass); background: var(--brass-soft); border-radius: 10px; padding: 22px; display: grid; gap: 10px; }
+.event .eyebrow { color: var(--brass); }
+.podium { display: grid; gap: 8px; }
+.podium .pl:first-child { border-color: var(--brass); box-shadow: 0 0 0 2px var(--brass) inset; }
+.review { display: grid; gap: 10px; }
+.review .item { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: grid; gap: 4px; }
+.pop { animation: pop .35s ease; }
+@keyframes pop { from { transform: scale(.97); opacity: .6; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+footer { margin-top: 40px; font-size: .8rem; color: var(--muted); }
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <span class="eyebrow">ECO 4343 · Hunt &amp; Lautzenheiser, Ch. 9 · Karl Marx</span>
+    <h1>The Hidden Abode</h1>
+    <p class="lede">Marx said profit isn't made in the market. It's made in "the hidden abode of production," in the hours a worker keeps working after earning back the wage. Study the theory, test it in the lab, then play against your friends.</p>
+    <div class="daybar" aria-label="A 10-hour working day: 4 hours of necessary labor, 6 hours of surplus labor">
+      <div class="day"><div class="seg need" style="flex-grow:4">4 h · wages</div><div class="seg surp" style="flex-grow:6">6 h · surplus value</div></div>
+      <div class="ticks"><span>0h</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10h</span></div>
+      <div class="legend"><span><i style="background:var(--red)"></i>Necessary labor (v)</span><span><i style="background:var(--brass)"></i>Surplus labor (s)</span><span class="mono">s/v = 6/4 = 1.5</span></div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button role="tab" id="tab-play" aria-controls="play" aria-selected="true">Play</button>
+    <button role="tab" id="tab-study" aria-controls="study" aria-selected="false">Study</button>
+    <button role="tab" id="tab-lab" aria-controls="lab" aria-selected="false">Workday Lab</button>
+    <button role="tab" id="tab-prices" aria-controls="prices" aria-selected="false">Values → Prices</button>
+    <button role="tab" id="tab-cards" aria-controls="cards" aria-selected="false">Flashcards</button>
+  </nav>
+
+  <!-- PLAY -->
+  <section role="tabpanel" id="play" aria-labelledby="tab-play">
+    <div id="game"></div>
+  </section>
+
+  <!-- STUDY -->
+  <section role="tabpanel" id="study" aria-labelledby="tab-study" hidden>
+    <div class="callout"><b>How to read this chapter:</b> Hunt is mostly on Marx's side here. He explains Marx, defends him from common misreadings, and criticizes him in only a couple of spots (marked "Hunt's view").</div>
+    <div class="ideas">
+      <article class="idea">
+        <span class="eyebrow">1 · The critique</span>
+        <h3>Capitalism is historical</h3>
+        <p>Classical economists lacked historical perspective. Slave society, feudalism, and capitalism are different <b>modes of production</b>. Two confusions followed:</p>
+        <ul>
+          <li><b>Capital is universal.</b> Tools exist everywhere; they become <i>capital</i> only when they bring profit to an owning class. (Hodgskin was the exception.)</li>
+          <li><b>Economics is exchange.</b> Bastiat: "political economy is exchange." Looking only at the market, everyone seems free, equal, and in harmony.</li>
+        </ul>
+        <p>Against Mill: the form of property decides distribution, so production and distribution aren't separate.</p>
+      </article>
+      <article class="idea">
+        <span class="eyebrow">2 · Commodities</span>
+        <h3>Use value &amp; value</h3>
+        <ul>
+          <li><b>Use value</b>: usefulness. Different qualities, not comparable.</li>
+          <li><b>Exchange value</b>: trading ratio, shown as price.</li>
+          <li><b>Value</b>: the common substance, <b>socially necessary labor time</b>. Skilled labor counts as a multiple of simple labor.</li>
+          <li><b>Useful labor</b> makes use values; <b>abstract labor</b> makes value.</li>
+          <li>Labor done privately becomes <b>social</b> only when the product sells. People's relations appear as relations between things.</li>
+        </ul>
+      </article>
+      <article class="idea">
+        <span class="eyebrow">3 · The circuits</span>
+        <h3>C–M–C vs. M–C–M′</h3>
+        <ul>
+          <li><span class="formula">C–M–C</span> sell to buy; ends with a use value.</li>
+          <li><span class="formula">M–C–M′</span> buy to sell dearer; never ends. M′ − M = <b>surplus value</b>.</li>
+          <li>Exchange can't create it: equal trades gain nothing, unequal trades just move value around.</li>
+          <li>Industrial capital: <span class="formula">M–C…P…C′–M′</span>. Merchant and interest-bearing capital are "derivative": they share surplus made elsewhere.</li>
+        </ul>
+      </article>
+      <article class="idea">
+        <span class="eyebrow">4 · The secret of profit</span>
+        <h3>Labor vs. labor power</h3>
+        <ul>
+          <li>Workers sell <b>labor power</b> (capacity to work), worth the subsistence of their family. Subsistence is cultural, not biological.</li>
+          <li>The <b>labor</b> they actually perform creates more value than that.</li>
+          <li>Workers are "free in a double sense": legally free, and free of any means of production.</li>
+          <li><b>Capitalism</b> = a small class owns the means of production; everyone else must sell labor power or starve.</li>
+        </ul>
+      </article>
+      <article class="idea">
+        <span class="eyebrow">5 · The formulas</span>
+        <h3>c, v, s</h3>
+        <ul>
+          <li><b>Constant capital c</b>: machines, materials. Only passes on its own value.</li>
+          <li><b>Variable capital v</b>: labor power. Its value grows.</li>
+          <li>Value = <span class="formula">c + v + s</span></li>
+          <li>Rate of surplus value <span class="formula">s/v</span> = surplus ÷ necessary labor = rate of exploitation.</li>
+          <li>Organic composition <span class="formula">c/v</span></li>
+          <li>Rate of profit <span class="formula">r = s/(c+v) = (s/v)/(c/v+1)</span></li>
+          <li>Capitalists fight to lengthen the working day. "Accumulate, accumulate!"</li>
+        </ul>
+      </article>
+      <article class="idea">
+        <span class="eyebrow">6 · Values and prices</span>
+        <h3>The transformation problem</h3>
+        <ul>
+          <li>Value is the <b>essence</b>; price is its <b>appearance</b>.</li>
+          <li>Competition equalizes s/v and r, but c/v differs by industry. So prices of production must differ from values.</li>
+          <li>High c/v → price above value. Low c/v → price below value. Surplus value is <b>redistributed</b>, not lost.</li>
+          <li>Flaw: Marx transformed outputs but not inputs. Full solutions (Bortkiewicz on) keep only <b>two of three</b> equalities.</li>
+          <li><b>Hunt's view:</b> charging Marx with a logical error is wrong.</li>
+        </ul>
+      </article>
+      <article class="idea">
+        <span class="eyebrow">7 · Origins</span>
+        <h3>Primitive accumulation</h3>
+        <p>The economists' story: a frugal elite saved, the lazy spent. Marx compared it to original sin. The real history was <b>force</b>:</p>
+        <ul>
+          <li>Peasants driven off land (enclosures, church and common lands seized), then whipped into wage discipline.</li>
+          <li>Fortunes from American gold and silver, slavery, colonial looting, national debt, protectionism, all using state power.</li>
+          <li>"Force is the midwife of every old society pregnant with a new one."</li>
+        </ul>
+      </article>
+      <article class="idea">
+        <span class="eyebrow">8 · Laws of motion</span>
+        <h3>Where accumulation leads</h3>
+        <ul>
+          <li><b>Concentration</b>: the strong absorb the weak; technology raises the minimum capital.</li>
+          <li><b>Falling rate of profit</b>: c/v rises. Offsets: speed-ups, wages below value, cheaper constant capital, foreign trade. A <i>tendency</i>, not a forecast; total profit can still rise.</li>
+          <li><b>Crises</b>: reserve army → labor-saving machines → demand falls short → imbalance between capital-goods and consumer-goods sectors → general glut. About a 10-year cycle.</li>
+          <li><b>Alienation</b> and <b>increasing misery</b>, even if wages rise.</li>
+        </ul>
+      </article>
+      <article class="idea">
+        <span class="eyebrow">9 · Hunt's verdict</span>
+        <h3>What holds up</h3>
+        <ul>
+          <li>Weak spot: Marx didn't connect c/v and s/v. New technology can raise real wages <i>and</i> s/v; "capital-saving" innovation may keep c/v from rising.</li>
+          <li>Marx didn't foresee repression turning misery into apathy and despair instead of revolution.</li>
+          <li>The Soviet collapse doesn't disprove him: he analyzed <b>capitalism</b>, and only capitalism can prove him wrong.</li>
+        </ul>
+      </article>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Marx vs.</th><th>Where they agree</th><th>Where Marx breaks</th></tr></thead>
+        <tbody>
+          <tr><td><b>Smith &amp; Ricardo</b></td><td>Labor theory of value; profit is a deduction from labor's product.</td><td>They treated capitalism as natural and eternal.</td></tr>
+          <tr><td><b>Malthus</b></td><td>Wages tend toward subsistence.</td><td>Rejects the population principle; the reserve army keeps wages down.</td></tr>
+          <tr><td><b>Senior, Say, Bastiat</b></td><td>Little.</td><td>"Political economy is exchange" hides production; the frugal-elite story of capital is a myth.</td></tr>
+          <tr><td><b>Mill</b></td><td>Subsistence is cultural; foreign trade raises profits; profit rate tends to fall.</td><td>Production and distribution can't be separated.</td></tr>
+          <tr><td><b>Hodgskin</b></td><td>Capital isn't universal to all production.</td><td>Marx still criticized many of his ideas.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- LAB -->
+  <section role="tabpanel" id="lab" aria-labelledby="tab-lab" hidden>
+    <div>
+      <h2>Workday Lab</h2>
+      <p class="muted">Move the sliders to see where surplus value comes from and why the profit rate tends to fall. Units are hours of labor per worker per day.</p>
+    </div>
+    <div class="lab">
+      <div class="panel">
+        <div class="slider"><label for="l-day">Length of the working day <output id="o-day"></output></label><input type="range" id="l-day" min="6" max="16" step="1" value="10"></div>
+        <div class="slider"><label for="l-need">Necessary labor (value of labor power, v) <output id="o-need"></output></label><input type="range" id="l-need" min="1" max="10" step="1" value="4"></div>
+        <div class="slider"><label for="l-c">Constant capital used up (c) <output id="o-c"></output></label><input type="range" id="l-c" min="0" max="60" step="2" value="16"></div>
+        <div class="daybar">
+          <div class="day"><div class="seg need" id="b-need"></div><div class="seg surp" id="b-surp"></div></div>
+          <div class="ticks" id="b-ticks"></div>
+        </div>
+        <p class="muted" id="lab-note"></p>
+      </div>
+      <div class="panel">
+        <div class="stats">
+          <div class="stat"><span>Surplus value s</span><b id="s-s"></b></div>
+          <div class="stat hl"><span>Rate of surplus value s/v</span><b id="s-sv"></b></div>
+          <div class="stat"><span>Organic composition c/v</span><b id="s-cv"></b></div>
+          <div class="stat hl"><span>Rate of profit s/(c+v)</span><b id="s-r"></b></div>
+        </div>
+        <p class="mono" id="s-val" style="font-size:.9rem"></p>
+        <div class="row" style="justify-content:flex-start">
+          <button class="btn" id="p-book">Book example</button>
+          <button class="btn" id="p-long">Lengthen the day</button>
+          <button class="btn" id="p-mech">Add machinery</button>
+          <button class="btn" id="p-cheap">Cheaper subsistence</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICES -->
+  <section role="tabpanel" id="prices" aria-labelledby="tab-prices" hidden>
+    <div>
+      <h2>Values → Prices</h2>
+      <p class="muted">Marx's five-industry example from Volume 3 (Hunt's Tables 9.1 and 9.2). Each industry has 100 of capital, s/v = 100% everywhere, but different organic compositions. Switch views to watch competition equalize the profit rate.</p>
+    </div>
+    <div class="row" style="justify-content:flex-start">
+      <div class="seg-toggle" role="group" aria-label="Table view">
+        <button id="v-before" aria-pressed="true">Prices = values</button>
+        <button id="v-after" aria-pressed="false">After competition</button>
+      </div>
+    </div>
+    <div class="tbl-wrap"><table id="tt"></table></div>
+    <p id="tt-note" class="callout"></p>
+  </section>
+
+  <!-- CARDS -->
+  <section role="tabpanel" id="cards" aria-labelledby="tab-cards" hidden>
+    <div class="fc-stage">
+      <span class="eyebrow" id="fc-count"></span>
+      <button class="flash" id="flash" aria-label="Flip card">
+        <div class="flash-inner">
+          <div class="face front"><span class="eyebrow">Term</span><span class="term" id="fc-term"></span><span class="muted">Tap to flip</span></div>
+          <div class="face back"><span id="fc-def"></span></div>
+        </div>
+      </button>
+      <div class="row">
+        <button class="btn" id="fc-prev">Previous</button>
+        <button class="btn" id="fc-shuf">Shuffle</button>
+        <button class="btn primary" id="fc-next">Next</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>Based on Hunt &amp; Lautzenheiser, <i>History of Economic Thought: A Critical Perspective</i> (2011), ch. 9 "Karl Marx," pp. 202–246. Study aid for ECO 4343.</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  const $ = (s, r = document) => r.querySelector(s);
+  const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const money = (n) => (n < 0 ? "−£" : "£") + Math.abs(n);
+  const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+  /* ---------- Tabs ---------- */
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  function showTab(id) {
+    tabs.forEach((t) => {
+      const on = t.getAttribute("aria-controls") === id;
+      t.setAttribute("aria-selected", on);
+      $("#" + t.getAttribute("aria-controls")).hidden = !on;
+    });
+  }
+  tabs.forEach((t) => t.addEventListener("click", () => showTab(t.getAttribute("aria-controls"))));
+  const h = location.hash.replace("#", "");
+  if (["play", "study", "lab", "prices", "cards"].includes(h)) showTab(h);
+
+  /* ---------- Lab ---------- */
+  const L = { day: $("#l-day"), need: $("#l-need"), c: $("#l-c") };
+  let prevR = null;
+  function lab() {
+    let day = +L.day.value, need = +L.need.value, c = +L.c.value;
+    L.need.max = day - 1;
+    if (need > day - 1) { need = day - 1; L.need.value = need; }
+    const s = day - need, v = need;
+    const sv = s / v, cv = c / v, r = s / (c + v);
+    $("#o-day").textContent = day + " h";
+    $("#o-need").textContent = need + " h";
+    $("#o-c").textContent = c + " h";
+    $("#b-need").style.flexGrow = need; $("#b-need").textContent = need + " h";
+    $("#b-surp").style.flexGrow = s; $("#b-surp").textContent = s + " h";
+    $("#b-ticks").innerHTML = "<span>0h</span><span>" + day + "h</span>";
+    $("#s-s").textContent = s + " h";
+    $("#s-sv").textContent = (sv * 100).toFixed(0) + "%";
+    $("#s-cv").textContent = cv.toFixed(2);
+    $("#s-r").textContent = (r * 100).toFixed(1) + "%";
+    $("#s-val").textContent = "Value of the day's product = c + v + s = " + c + " + " + v + " + " + s + " = " + (c + v + s) + " hours";
+    let note = "The worker earns back the wage in " + need + " hours, then works " + s + " more for the capitalist.";
+    if (prevR !== null && Math.abs(r - prevR) > 1e-9) note += r < prevR ? " The profit rate just fell." : " The profit rate just rose.";
+    $("#lab-note").textContent = note;
+    prevR = r;
+  }
+  Object.values(L).forEach((el) => el.addEventListener("input", lab));
+  const preset = (d, n, c) => { L.day.value = d; L.need.max = d - 1; L.need.value = n; L.c.value = c; lab(); };
+  $("#p-book").onclick = () => preset(10, 4, 16);
+  $("#p-long").onclick = () => preset(Math.min(16, +L.day.value + 2), +L.need.value, +L.c.value);
+  $("#p-mech").onclick = () => preset(+L.day.value, +L.need.value, Math.min(60, +L.c.value + 12));
+  $("#p-cheap").onclick = () => preset(+L.day.value, Math.max(1, +L.need.value - 1), +L.c.value);
+  lab();
+
+  /* ---------- Transformation tables ---------- */
+  const IND = [
+    { n: "I", C: 80, cu: 50, v: 20, s: 20 },
+    { n: "II", C: 70, cu: 51, v: 30, s: 30 },
+    { n: "III", C: 60, cu: 51, v: 40, s: 40 },
+    { n: "IV", C: 85, cu: 40, v: 15, s: 15 },
+    { n: "V", C: 95, cu: 10, v: 5, s: 5 },
+  ];
+  function table(after) {
+    $("#v-before").setAttribute("aria-pressed", !after);
+    $("#v-after").setAttribute("aria-pressed", after);
+    let head = '<thead><tr><th>Industry</th><th class="num">c/v</th><th class="num">Cost (c+v)</th><th class="num">Surplus value</th><th class="num">Value</th>';
+    head += after ? '<th class="num">Profit</th><th class="num">Price</th><th class="num">Price − value</th><th class="num">Profit rate</th>' : '<th class="num">Profit rate</th>';
+    head += "</tr></thead>";
+    let body = "<tbody>", T = { cost: 0, s: 0, val: 0, price: 0 };
+    IND.forEach((i) => {
+      const cost = i.cu + i.v, val = cost + i.s, price = cost + 22, d = price - val;
+      T.cost += cost; T.s += i.s; T.val += val; T.price += price;
+      body += "<tr><td><b>" + i.n + "</b></td><td class='num'>" + (i.C / i.v).toFixed(1) + "</td><td class='num'>" + cost + "</td><td class='num'>" + i.s + "</td><td class='num'>" + val + "</td>";
+      body += after
+        ? "<td class='num'>22</td><td class='num'><b>" + price + "</b></td><td class='num " + (d > 0 ? "up" : "down") + "'>" + (d > 0 ? "+" : "") + d + "</td><td class='num'><b>22%</b></td>"
+        : "<td class='num'><b>" + i.s + "%</b></td>";
+      body += "</tr>";
+    });
+    body += "<tr><td><b>Total</b></td><td class='num'>3.5</td><td class='num'>" + T.cost + "</td><td class='num'>" + T.s + "</td><td class='num'>" + T.val + "</td>";
+    body += after ? "<td class='num'>110</td><td class='num'><b>" + T.price + "</b></td><td class='num'>0</td><td class='num'>22%</td>" : "<td class='num'>avg 22%</td>";
+    body += "</tr></tbody>";
+    $("#tt").innerHTML = head + body;
+    $("#tt-note").innerHTML = after
+      ? "<b>After competition:</b> every industry earns the average 22%. Industries with <b>high c/v</b> (I, IV, V) sell <b>above</b> value; those with <b>low c/v</b> (II, III) sell <b>below</b>. Total price (422) = total value (422) and total profit (110) = total surplus value (110). Surplus value was redistributed, not created. <b>The catch:</b> inputs are still priced at values, which is the flaw later economists fixed."
+      : "<b>Prices = values:</b> each industry keeps exactly the surplus value its own workers create. Labor-heavy industry III earns 40%; machine-heavy V earns 5%. Capital would flood out of V and into III, so this can't last.";
+  }
+  $("#v-before").onclick = () => table(false);
+  $("#v-after").onclick = () => table(true);
+  table(false);
+
+  /* ---------- Flashcards ---------- */
+  const CARDS = [
+    ["Mode of production", "A historically specific way of organizing production: slave society, feudalism, capitalism."],
+    ["Use value", "The useful physical qualities of a commodity. Different qualities that can't be compared as quantities."],
+    ["Exchange value", "The ratio at which a commodity trades for others, usually expressed as a money price."],
+    ["Value (Marx)", "A social relation of indirectly social labor. Its size is the socially necessary labor time to produce the commodity."],
+    ["Socially necessary labor time", "Labor time needed under normal conditions, with average skill and intensity."],
+    ["Abstract labor", "Labor as general human effort, all differences ignored. The substance of value."],
+    ["Useful labor", "The concrete, specific kind of work (tailoring, weaving). It produces use values."],
+    ["C–M–C", "Selling in order to buy. Simple commodity circulation; ends when you get the use value you need."],
+    ["M–C–M′", "Buying in order to sell dearer. The general formula of capital. M′ − M is surplus value."],
+    ["Labor power", "The capacity to work. What the worker sells. Its value = subsistence of the worker's family."],
+    ["Free in a double sense", "Legally free to sell your labor power, and free of (lacking) any means of production."],
+    ["Necessary labor", "The part of the day in which the worker produces the value of his or her own wage."],
+    ["Surplus labor", "The rest of the working day. It creates surplus value for the capitalist."],
+    ["Constant capital (c)", "Means of production: machines, buildings, materials. Only transfers its own value to the product."],
+    ["Variable capital (v)", "Capital spent on labor power. Its value grows during production."],
+    ["Rate of surplus value", "s/v = surplus labor ÷ necessary labor. Marx's measure of the rate of exploitation."],
+    ["Organic composition of capital", "c/v: the value of means of production per unit of labor power."],
+    ["Price of production", "Cost (c + v) plus the average rate of profit. Deviates from value when c/v differs."],
+    ["Transformation problem", "How to convert values into prices of production consistently. Full solutions keep only two of Marx's three equalities."],
+    ["Primitive accumulation", "The violent historical process that created a propertyless working class and a wealthy capitalist class."],
+    ["Industrial reserve army", "Unemployed workers, created by accumulation and labor-saving machinery, who keep wages near subsistence."],
+    ["Falling rate of profit", "As c/v rises, the same surplus is spread over more capital. A tendency, with counteracting influences."],
+    ["Sectoral imbalance", "Mismatch between capital-goods and consumer-goods sectors relative to income distribution. Marx's cause of crises."],
+    ["Alienation", "Workers estranged from their work, their product, their surroundings, and each other."],
+    ["Law of increasing misery", "Accumulation of wealth at one pole = accumulation of misery at the other. Means alienation, not falling wages."],
+  ];
+  let deck = CARDS.slice(), fi = 0;
+  const flash = $("#flash");
+  function card() {
+    flash.classList.remove("flipped");
+    $("#fc-term").textContent = deck[fi][0];
+    $("#fc-def").textContent = deck[fi][1];
+    $("#fc-count").textContent = "Card " + (fi + 1) + " of " + deck.length;
+  }
+  flash.onclick = () => flash.classList.toggle("flipped");
+  $("#fc-next").onclick = () => { fi = (fi + 1) % deck.length; card(); };
+  $("#fc-prev").onclick = () => { fi = (fi - 1 + deck.length) % deck.length; card(); };
+  $("#fc-shuf").onclick = () => { deck = shuffle(CARDS); fi = 0; card(); };
+  card();
+
+  /* ---------- Game ---------- */
+  const DECKS = {
+    V: { name: "Commodities", tag: "Value, use value, abstract labor" },
+    S: { name: "Surplus Value", tag: "Labor power, c, v, s, the workday" },
+    T: { name: "Prices & Profit", tag: "c/v, profit rate, transformation" },
+    H: { name: "Origins", tag: "Critique of classics, primitive accumulation" },
+    L: { name: "Laws of Motion", tag: "Concentration, crises, alienation" },
+  };
+  const Q = [
+    // Commodities
+    ["V", "What are the two essential characteristics of a commodity for Marx?", "Use value and exchange value", ["Price and cost", "Utility and scarcity", "Labor and capital"], "A commodity satisfies wants (use value) and trades in ratio to other goods (exchange value)."],
+    ["V", "Why did Marx reject use value (utility) as the source of exchange value?", "Use values are different qualities that can't be compared as quantities, and they don't reflect capitalism's social relations", ["Use values are too easy to measure", "Ricardo had already proved utility determines price", "Use value only exists under feudalism"], "As use values, commodities differ in quality; as exchange values, they differ only in quantity."],
+    ["V", "Which kind of labor creates value (exchange value)?", "Abstract labor", ["Useful labor", "Skilled labor only", "Unproductive labor"], "Useful (concrete) labor makes use values. Abstract labor, with all differences ignored, is the substance of value."],
+    ["V", "A slow worker takes 10 hours to make a chair that normally takes 5. How much value does the chair contain?", "5 hours, the socially necessary labor time", ["10 hours, the actual time spent", "7.5 hours, the average of the two", "Whatever the buyer is willing to pay"], "Only labor time needed under normal conditions with average skill and intensity counts."],
+    ["V", "How does Marx handle skilled labor in computing value?", "As a multiple of simple labor, reflecting the cost of training", ["He leaves it out entirely", "It counts the same as simple labor", "It is valued by its utility to consumers"], "Skilled labor counts as 'multiplied simple labor'; wage differences reflect education and training costs."],
+    ["V", "When is a product of labor a commodity?", "When it is produced for exchange, not for the producer's own use", ["Whenever it is useful", "Whenever it takes labor to make", "Only when it is made in a factory"], "Products are commodities only when produced for sale in the market."],
+    ["V", "In a commodity-producing society, social relations among producers appear as…", "Relations between things (commodities and prices)", ["Direct personal relations", "Relations of feudal obligation", "Relations set by government planning"], "Each producer works alone and meets others only through the market, so people's relations look like relations among things."],
+    ["V", "When does private labor become social labor under capitalism?", "When the commodity is actually sold", ["When the worker clocks in", "When the capitalist pays wages", "When the product is finished"], "If the leather maker can't sell the leather, that labor was a 'private folly' that added nothing to society."],
+    ["V", "Why does Marx use 'value' and 'exchange value' interchangeably in Volume 1 of Capital?", "He assumed, as a first approximation like Ricardo, that prices are proportional to labor values", ["He didn't know the difference", "Engels changed the wording", "He believed utility and labor always coincide"], "He set aside secondary influences on price to explain profit; actual prices come in Volume 3."],
+    ["V", "Marx said the economists' picture of the market was 'a very Eden' ruled by four things. Which list is right?", "Freedom, Equality, Property and Bentham", ["Liberty, Fraternity, Equality and Smith", "Supply, Demand, Price and Say", "Land, Labor, Capital and Ricardo"], "Freedom (free contracts), Equality (equivalents traded), Property (each owns his own), Bentham (each looks only to himself)."],
+    ["V", "According to Hunt, what is the 'naïveté' of Smith's invisible hand argument?", "It looks only at exchange and assumes utility is created there, when useful labor creates all utility", ["It ignores government spending", "It assumes too much competition", "It relies on the labor theory of value"], "Exchange is just a requirement of commodity society; its look of harmony says nothing about class relations."],
+    ["V", "For Marx, value has a qualitative side. What is it?", "A social relation that exists when labor is not directly social", ["The physical properties of a good", "The satisfaction a buyer gets", "The legal title to a good"], "Producers depend on each other but don't see it as a relationship; I produce to sell, you buy to consume."],
+
+    // Surplus value
+    ["S", "What does C–M–C describe?", "Selling in order to buy, to get a use value", ["Buying in order to sell dearer", "Lending money at interest", "Producing for one's own use"], "Simple commodity circulation ends when you get the commodity you need."],
+    ["S", "What does M–C–M′ describe?", "Buying in order to sell dearer, where M′ is greater than M", ["Selling in order to buy", "Barter without money", "Saving money in a hoard"], "M–C–M′ is the general formula of capital. The increase M′ − M is surplus value."],
+    ["S", "Why can't surplus value arise in exchange?", "Equal exchanges create no gain, and unequal ones only transfer value from one side to the other", ["Because prices are set by the government", "Because money has no value", "Because workers refuse to trade"], "'Circulation, or the exchange of commodities, begets no value.'"],
+    ["S", "What does the worker actually sell to the capitalist?", "Labor power, the capacity to work", ["Labor, the work itself", "The finished product", "Their person, permanently"], "Selling oneself permanently would be slavery. Labor power is sold for a limited time."],
+    ["S", "What determines the value of labor power?", "The labor time needed to produce the subsistence of a worker's family", ["The marginal product of labor", "The value of what the worker produces", "A bare biological minimum set by nature"], "Subsistence is a 'product of historical development', depending on habits and customary comfort."],
+    ["S", "Subsistence takes 4 hours to produce and the working day is 10 hours. What is the rate of surplus value s/v?", "1.5 (150%)", ["0.4 (40%)", "0.6 (60%)", "2.5 (250%)"], "Surplus labor 6 ÷ necessary labor 4 = 1.5. This is the book's example."],
+    ["S", "Why is constant capital called 'constant'?", "It only transfers its own existing value to the product", ["Its price never changes", "It never wears out", "It is the same in every industry"], "Wool and looms pass their value into the cloth, no more and no less."],
+    ["S", "What is variable capital?", "Capital spent on labor power, whose value grows in production", ["Capital whose price fluctuates", "Borrowed capital", "Inventory of unsold goods"], "Labor power creates more value than it costs, so this part of capital 'varies.'"],
+    ["S", "Workers are 'free in a double sense.' What are the two senses?", "Legally free to sell their labor power, and free of any means of production", ["Free to vote and free to strike", "Free of debts and free of taxes", "Free to own land and free to trade"], "They own their own persons, but have nothing to sell except labor power."],
+    ["S", "How did Marx view merchant capital and interest-bearing capital?", "As derivative forms that share in surplus value created elsewhere", ["As the main source of surplus value", "As the defining form of capitalism", "As harmless forms that create value through trade"], "They existed under feudalism too, attaching themselves to whatever surplus existed."],
+    ["S", "What is the circuit of industrial capital?", "M–C…P…C′–M′", ["C–M–C", "M–M′", "C–C′"], "Buy inputs, produce (P), sell the larger-valued output. M′ exceeds M by exactly what C′ exceeds C."],
+    ["S", "Why did capitalists fight to lengthen the working day?", "Given subsistence, a longer day means more surplus labor and more surplus value", ["Longer days lower the value of machines", "Workers demanded longer hours", "It reduced the need for constant capital"], "Marx spent 72 pages on the historical struggle over the length of the working day."],
+    ["S", "Marx compared the capitalist to a miser. How?", "The miser is a capitalist gone mad; the capitalist is a rational miser", ["Both hoard money outside circulation", "Both care mainly about use values", "Neither cares about wealth"], "Both chase exchange value, but the capitalist keeps throwing money back into circulation."],
+
+    // Prices & profit
+    ["T", "What is the organic composition of capital?", "c/v, constant capital relative to variable capital", ["s/v", "s/(c+v)", "v/(c+s)"], "It measures means of production per unit of labor power."],
+    ["T", "What is the rate of profit?", "s/(c+v)", ["s/v", "c/v", "(c+v)/s"], "Surplus value over total capital. It can also be written (s/v)/(c/v + 1)."],
+    ["T", "If s/v stays the same and c/v rises, what happens to the rate of profit?", "It falls", ["It rises", "It stays the same", "It becomes negative"], "From r = (s/v)/(c/v+1): a larger denominator lowers r."],
+    ["T", "Why does a transformation problem arise?", "Competition equalizes both s/v and the profit rate, but c/v differs across industries", ["Workers refuse to accept prices", "Money is not a commodity", "Utility varies from person to person"], "If r and s/v are equal everywhere, c/v would have to be too. It isn't, so prices must differ from values."],
+    ["T", "In an industry with a higher than average organic composition, prices of production are…", "Above values", ["Below values", "Equal to values", "Zero"], "Surplus value is redistributed toward capital-intensive industries."],
+    ["T", "In Marx's five-industry example, what is the average rate of profit?", "22%", ["5%", "40%", "100%"], "Total surplus value 110 over total capital 500 = 22%."],
+    ["T", "Which three equalities did Marx claim hold after transformation?", "Equal profit rates, total prices = total values, total profit = total surplus value", ["Equal wages, equal prices, equal profits", "Equal c/v, equal s/v, equal prices", "Total wages = total profit, prices = values, r = s/v"], "Later solutions that transform inputs too keep only two of the three."],
+    ["T", "What was the flaw in Marx's transformation tables?", "He transformed output prices but left input prices at values", ["He forgot to include surplus value", "He used the wrong profit rate", "He ignored constant capital entirely"], "Each commodity then had two prices, one as output and one as input. Marx noted this himself."],
+    ["T", "Who found an early mathematical solution transforming both inputs and outputs?", "Bortkiewicz", ["Engels", "Keynes", "Jevons"], "His solution kept equal profit rates and total surplus value = total profit, but not total prices = total values."],
+    ["T", "What is Hunt's view of the charge that Marx made a logical error in the transformation?", "It's wrong: surplus value is created in proportion to living labor, then redistributed in circulation", ["It's correct and destroys the labor theory", "It doesn't matter because Marx was a historian", "Marx later admitted the error"], "Created s/v stays equal; realized s/v differs. There's no contradiction."],
+    ["T", "What is the formula for the price of production?", "p = c + v + r(c + v)", ["p = c + v + s", "p = s/v", "p = c/v + 1"], "Cost of production plus a markup at the average rate of profit."],
+    ["T", "In Marx's method, value is to price as…", "Essence is to appearance", ["Cause is to accident", "Demand is to supply", "Labor is to land"], "Abstract labor is the substance; price is how it appears under capitalism."],
+
+    // Origins
+    ["H", "What did Marx see as the greatest deficiency of most earlier economists?", "Lack of historical perspective", ["Too much mathematics", "Too much focus on agriculture", "Rejecting the labor theory of value"], "They treated capitalism's features as common to all production. This criticism applied least to Smith."],
+    ["H", "Which earlier writer did NOT confuse capital with something universal to all production?", "Hodgskin", ["Senior", "Bastiat", "Malthus"], "Nearly all previous economists made this mistake, except Hodgskin."],
+    ["H", "What makes 'instruments of production' into capital?", "Their power to yield profit to a special social class", ["Being made of metal", "Being used in any production", "Being purchased with money"], "Tools exist in every society; only under capitalism are they the source of a ruling class's income."],
+    ["H", "Marx disagreed with Mill about…", "The separation of production from distribution", ["Whether subsistence is cultural", "Whether profit rates tend to fall", "Whether foreign trade raises profits"], "For Marx, each mode of production's form of property determines distribution."],
+    ["H", "According to Marx, which form of property does history show was more original?", "Common property", ["Private property", "State property", "Corporate property"], "Communal property in India, among the Slavs and early Celts, etc."],
+    ["H", "What is primitive accumulation?", "The violent historical creation of a propertyless working class and a wealthy capitalist class", ["Saving by frugal early capitalists", "Accumulation in hunter-gatherer societies", "The first stage of a business cycle"], "Conquest, enslavement, robbery: 'force' played the main part."],
+    ["H", "Marx compared the economists' 'frugal elite' story of capital's origins to…", "Original sin in theology", ["A fairy tale about giants", "Robinson Crusoe", "The invisible hand"], "Adam bit the apple; the diligent saved, the lazy spent, and that supposedly explains everything."],
+    ["H", "Which was NOT one of Marx's sources of primitive accumulation?", "The savings of thrifty workers", ["Enclosure and theft of common lands", "Gold and silver from America", "The African slave trade"], "Marx named seizure of church and common lands, colonial looting, slavery, national debt, and protectionism."],
+    ["H", "Complete Marx's line: 'Force is the ___ of every old society pregnant with a new one.'", "Midwife", ["Enemy", "Father", "Gravedigger"], "State power hastened the transformation from feudalism to capitalism."],
+    ["H", "What happened to peasants driven off the land during primitive accumulation?", "Many became beggars and vagabonds, then were disciplined by harsh laws into wage labor", ["They became landowners in the colonies", "They were immediately hired in factories", "The state gave them pensions"], "There were no jobs waiting, so laws whipped and branded them into accepting the wage system."],
+    ["H", "Who edited and published volumes 2 and 3 of Capital?", "Friedrich Engels", ["John Stuart Mill", "Thomas Hodgskin", "Ladislaus Bortkiewicz"], "Volume 2 in 1885 and volume 3 in 1894, from Marx's unfinished drafts."],
+    ["H", "Which economists was Marx 'nearly entirely critical and contemptuous' of?", "Malthus, Bentham, Senior, Say, and Bastiat", ["Smith and Ricardo", "Thompson and Hodgskin", "Mill alone"], "He built on Smith and Ricardo and took Mill seriously as an opponent."],
+    ["H", "What is the name of Marx's 1857–58 notebooks that were a rough draft of Capital?", "Grundrisse", ["The Communist Manifesto", "Theories of Surplus Value", "The Wealth of Nations"], "Grundrisse der Kritik der Politischen Ökonomie (Foundations of the Critique of Political Economy)."],
+
+    // Laws of motion
+    ["L", "What two forces lead to economic concentration?", "Competition (strong absorb weak) and technology raising the minimum capital needed", ["Government regulation and taxes", "Falling wages and rising rents", "Foreign trade and colonialism"], "Fewer and larger firms owned by fewer capitalists."],
+    ["L", "Does a falling rate of profit mean total profit falls?", "No: Marx thought total profit would generally rise", ["Yes, always", "Yes, and the profit share falls too", "Only in agriculture"], "Total profit depends on the rate and the total amount of capital."],
+    ["L", "Which is one of Marx's counteracting influences on the falling rate of profit?", "Cheapening of the elements of constant capital", ["A rising organic composition of capital", "Malthus's population principle", "Shorter working days"], "Others: more intense exploitation, wages below value, foreign trade."],
+    ["L", "Marx's brief remarks on foreign trade became the basis for later theories of…", "Imperialism", ["Comparative advantage", "Marginal utility", "Rational expectations"], "Disciples of Marx developed these in the early 20th century (Ch. 13)."],
+    ["L", "What is Hunt's main criticism of the falling-rate-of-profit argument?", "Marx didn't link c/v to s/v; new technology can raise both real wages and s/v, and capital-saving innovation may keep c/v from rising", ["Marx used the wrong formula for profit", "Profit rates have never fallen", "Marx ignored constant capital"], "The change in c/v could create its own counteracting influence."],
+    ["L", "For Marx, what keeps wages near subsistence?", "The industrial reserve army of unemployed workers", ["Malthus's principle of population", "Minimum wage laws", "The iron law set by nature"], "Marx rejected Malthus: each mode of production has its own laws of population."],
+    ["L", "In a boom, when wages rise, how do capitalists respond?", "They introduce labor-saving machinery, which refills the reserve army", ["They raise wages further", "They close their factories", "They lobby for immigration limits"], "Technological unemployment 'saved the day' but created new problems."],
+    ["L", "What is the originating cause of crises in Marx's theory?", "A structural imbalance between the capital-goods and consumer-goods sectors relative to income distribution", ["Bad harvests", "Too much money printing", "Workers saving too much"], "Unlike simple underconsumption theories, a crisis can show up first in either sector."],
+    ["L", "Roughly how long is the industrial cycle Marx described?", "About ten years", ["About one year", "About fifty years", "About a century"], "A 'decennial cycle' of average activity, boom, crisis, and stagnation."],
+    ["L", "What is alienation?", "Workers feeling cut off from their work, their product, their surroundings, and each other", ["Workers moving to foreign countries", "Capitalists losing their firms", "The separation of town and country"], "Labor becomes external, forced, and not part of the worker's own being."],
+    ["L", "Does Marx's 'law of increasing misery' mean wages will keep falling?", "No: wages could rise; misery means growing alienation", ["Yes, real wages fall every year", "Yes, down to zero", "It only applies to farm workers"], "Higher wages only lengthen and loosen the 'golden chain.'"],
+    ["L", "Where did Marx expect a humane socialist system could first be built?", "In advanced industrial capitalist economies", ["In agricultural countries", "In feudal monarchies", "In colonies"], "Only there did the industrial base and productivity exist."],
+    ["L", "According to Hunt, why doesn't the Soviet collapse (1989–91) disprove Marx?", "Marx analyzed capitalism, so only events in capitalist economies could prove him wrong", ["The collapse never happened", "Marx predicted it exactly", "Hunt thinks Marx was wrong anyway"], "Marx didn't write about the nature of economies like those."],
+    ["L", "What development did Marx not foresee, according to Hunt?", "Repression channeling workers' misery into apathy, despair, and isolation instead of revolt", ["The rise of factories", "The growth of the working class", "Business cycles"], "This helps explain capitalism's survival."],
+  ].map(([d, q, a, wrong, e], i) => ({ id: i, d, q, a, wrong, e }));
+
+  const EVENTS = [
+    { t: "Concentration", d: "The strong absorb the weak. The last-place player loses 100 to the leader.", f(P) { const s = P.slice().sort((a, b) => b.score - a.score); const top = s[0], low = s[s.length - 1]; if (top === low || top.score === low.score) return "Scores are tied, so nobody was absorbed this time."; const amt = Math.min(100, Math.max(0, low.score)); low.score -= amt; top.score += amt; return esc(top.name) + " absorbs " + amt + " from " + esc(low.name) + "."; } },
+    { t: "Commercial crisis", d: "A sectoral imbalance turns into a general glut. Everyone loses 15% of their capital.", f(P) { P.forEach((p) => { if (p.score > 0) p.score = Math.round(p.score * 0.85); }); return "Every positive score drops by 15%."; } },
+    { t: "Foreign trade", d: "A counteracting influence: higher profits abroad. Everyone gains 50.", f(P) { P.forEach((p) => (p.score += 50)); return "Everyone gains 50."; } },
+    { t: "Struggle over the working day", d: "Workers win a shorter day. The leader gives up 50; the last-place player gains 50.", f(P) { const s = P.slice().sort((a, b) => b.score - a.score); if (s[0].score === s[s.length - 1].score) return "Everyone is tied, so nothing changes."; s[0].score -= 50; s[s.length - 1].score += 50; return esc(s[0].name) + " −50, " + esc(s[s.length - 1].name) + " +50."; } },
+    { t: "Accumulate, accumulate!", d: "A quiet round. Capital rolls on.", f() { return "No change."; } },
+  ];
+
+  const G = { el: $("#game"), setup: { n: 2, names: ["", "", "", ""], rounds: 5 } };
+
+  function boardHTML(active) {
+    return '<div class="board">' + G.players.map((p, i) =>
+      '<div class="pl' + (i === active ? " active" : "") + '"><span class="nm">' + esc(p.name) + '</span><span class="sc">' + money(p.score) + '</span><span class="eyebrow">' + p.right + " right · " + p.wrongCount + " missed</span></div>").join("") + "</div>";
+  }
+
+  function renderSetup() {
+    const S = G.setup;
+    let names = "";
+    for (let i = 0; i < S.n; i++) names += '<input type="text" id="pn' + i + '" maxlength="20" placeholder="Player ' + (i + 1) + '" value="' + esc(S.names[i]) + '" aria-label="Player ' + (i + 1) + ' name">';
+    G.el.innerHTML =
+      '<div class="setup pop">' +
+      '<div><h2>Pass-and-play</h2><p class="muted">2–4 players share one screen and take turns. Pick a deck, choose your circuit, answer. Most capital after the last round wins.</p></div>' +
+      '<div class="field"><span>Players</span><div class="chips" role="group" aria-label="Number of players">' + [2, 3, 4].map((n) => '<button class="chip" data-n="' + n + '" aria-pressed="' + (S.n === n) + '">' + n + "</button>").join("") + "</div></div>" +
+      '<div class="field"><span>Names</span><div class="names">' + names + "</div></div>" +
+      '<div class="field"><span>Rounds</span><div class="chips" role="group" aria-label="Number of rounds">' + [3, 5, 8].map((n) => '<button class="chip" data-r="' + n + '" aria-pressed="' + (S.rounds === n) + '">' + n + " rounds</button>").join("") + "</div></div>" +
+      '<div class="tbl-wrap"><table><thead><tr><th>Your choice each turn</th><th class="num">Right</th><th class="num">Wrong</th></tr></thead><tbody>' +
+      '<tr><td><span class="formula">C–M–C</span> Sell to buy. Play it safe.</td><td class="num">+£100</td><td class="num">£0</td></tr>' +
+      '<tr><td><span class="formula">M–C–M′</span> Buy to sell dearer. Risk your capital.</td><td class="num">+£250</td><td class="num">−£100</td></tr>' +
+      "</tbody></table></div>" +
+      '<p class="muted">After every round, a <b>law of motion</b> hits the market: concentration, crisis, foreign trade, or a struggle over the working day.</p>' +
+      '<div><button class="btn primary" id="start">Start the game</button></div></div>';
+    G.el.querySelectorAll("[data-n]").forEach((b) => (b.onclick = () => { saveNames(); S.n = +b.dataset.n; renderSetup(); }));
+    G.el.querySelectorAll("[data-r]").forEach((b) => (b.onclick = () => { saveNames(); S.rounds = +b.dataset.r; renderSetup(); }));
+    $("#start").onclick = () => { saveNames(); start(); };
+  }
+  function saveNames() { for (let i = 0; i < G.setup.n; i++) { const el = $("#pn" + i); if (el) G.setup.names[i] = el.value.trim(); } }
+
+  function start() {
+    const S = G.setup;
+    G.players = Array.from({ length: S.n }, (_, i) => ({ name: S.names[i] || "Player " + (i + 1), score: 0, right: 0, wrongCount: 0 }));
+    G.pool = {}; Object.keys(DECKS).forEach((k) => (G.pool[k] = shuffle(Q.filter((q) => q.d === k))));
+    G.round = 1; G.turn = 0; G.missed = [];
+    renderPickDeck();
+  }
+
+  function head(sub) {
+    const p = G.players[G.turn];
+    return boardHTML(G.turn) + '<div class="turn pop"><div class="turn-head"><h2>' + esc(p.name) + "'s turn</h2><span class=\"eyebrow\">Round " + G.round + " of " + G.setup.rounds + "</span></div>" + sub;
+  }
+
+  function renderPickDeck() {
+    const any = Object.keys(DECKS).some((k) => G.pool[k].length);
+    if (!any) { renderEnd(); return; }
+    G.el.innerHTML = head('<p class="muted">Pick a deck.</p><div class="decks">' + Object.keys(DECKS).map((k) =>
+      '<button class="deck" data-k="' + k + '"' + (G.pool[k].length ? "" : " disabled") + "><b>" + DECKS[k].name + "</b><small>" + DECKS[k].tag + "</small><small class=\"mono\">" + G.pool[k].length + " left</small></button>").join("") + "</div></div>");
+    G.el.querySelectorAll(".deck").forEach((b) => (b.onclick = () => { G.deck = b.dataset.k; renderCircuit(); }));
+  }
+
+  function renderCircuit() {
+    G.el.innerHTML = head('<p class="muted">Deck: <b>' + DECKS[G.deck].name + '</b>. How will you put your capital to work?</p><div class="circuits">' +
+      '<button class="circuit safe" data-c="safe"><span class="f">C–M–C</span><b>Sell to buy</b><span class="muted">Right: +£100 · Wrong: £0</span></button>' +
+      '<button class="circuit risk" data-c="risk"><span class="f">M–C–M′</span><b>Buy to sell dearer</b><span class="muted">Right: +£250 · Wrong: −£100</span></button></div></div>');
+    G.el.querySelectorAll(".circuit").forEach((b) => (b.onclick = () => { G.circuit = b.dataset.c; renderQuestion(); }));
+  }
+
+  function renderQuestion() {
+    const q = G.pool[G.deck].pop();
+    G.q = q;
+    const opts = shuffle([q.a, ...q.wrong]);
+    G.el.innerHTML = head('<span class="eyebrow">' + DECKS[G.deck].name + " · " + (G.circuit === "risk" ? "M–C–M′ (+250 / −100)" : "C–M–C (+100 / 0)") + '</span><p class="q">' + esc(q.q) + '</p><div class="opts">' +
+      opts.map((o, i) => '<button class="opt" data-o="' + esc(o) + '"><span class="k">' + "ABCD"[i] + "</span><span>" + esc(o) + "</span></button>").join("") + '</div><div id="after"></div></div>');
+    G.el.querySelectorAll(".opt").forEach((b) => (b.onclick = () => answer(b)));
+  }
+
+  function answer(btn) {
+    const q = G.q, p = G.players[G.turn], ok = btn.dataset.o === q.a;
+    G.el.querySelectorAll(".opt").forEach((b) => { b.disabled = true; if (b.dataset.o === q.a) b.classList.add("right"); });
+    let delta;
+    if (ok) { delta = G.circuit === "risk" ? 250 : 100; p.right++; }
+    else { btn.classList.add("wrong"); delta = G.circuit === "risk" ? -100 : 0; p.wrongCount++; G.missed.push({ who: p.name, q }); }
+    p.score += delta;
+    G.el.querySelector(".board").outerHTML = boardHTML(G.turn);
+    const last = G.turn === G.players.length - 1;
+    $("#after").innerHTML = '<div class="verdict ' + (ok ? "ok" : "no") + ' pop"><strong>' + (ok ? "Correct" : "Not quite") + " · " + (delta >= 0 ? "+" : "−") + "£" + Math.abs(delta) + "</strong><span>" + (ok ? "" : "Answer: <b>" + esc(q.a) + "</b>. ") + esc(q.e) + "</span></div>" +
+      '<div class="row" style="justify-content:flex-start;margin-top:12px"><button class="btn primary" id="next">' + (last ? "End round" : "Pass to " + esc(G.players[G.turn + 1].name)) + "</button></div>";
+    $("#next").focus();
+    $("#next").onclick = () => { if (last) renderEvent(); else { G.turn++; renderPickDeck(); } };
+  }
+
+  function renderEvent() {
+    const ev = Math.random() < 0.3 ? EVENTS[4] : EVENTS[Math.floor(Math.random() * 4)];
+    const res = ev.f(G.players);
+    const final = G.round >= G.setup.rounds;
+    G.el.innerHTML = boardHTML(-1) + '<div class="event pop"><span class="eyebrow">Law of motion · end of round ' + G.round + "</span><h2>" + ev.t + "</h2><p>" + ev.d + "</p><p><b>" + res + "</b></p>" +
+      '<div><button class="btn primary" id="go">' + (final ? "See results" : "Start round " + (G.round + 1)) + "</button></div></div>";
+    $("#go").focus();
+    $("#go").onclick = () => { if (final) renderEnd(); else { G.round++; G.turn = 0; renderPickDeck(); } };
+  }
+
+  function renderEnd() {
+    const ranked = G.players.slice().sort((a, b) => b.score - a.score);
+    const tie = ranked.length > 1 && ranked[0].score === ranked[1].score;
+    let html = '<div class="turn pop"><span class="eyebrow">Game over</span><h2>' + (tie ? "A tie at the top" : esc(ranked[0].name) + " accumulates the most") + "</h2>" +
+      '<div class="podium">' + ranked.map((p, i) => '<div class="pl"><span class="eyebrow">#' + (i + 1) + '</span><span class="nm">' + esc(p.name) + '</span><span class="sc">' + money(p.score) + '</span><span class="muted">' + p.right + " right · " + p.wrongCount + " missed</span></div>").join("") + "</div>";
+    if (G.missed.length) {
+      html += "<h3>Review what you missed</h3><div class=\"review\">" + G.missed.map((m) => '<div class="item"><span class="eyebrow">' + esc(m.who) + " · " + DECKS[m.q.d].name + "</span><b>" + esc(m.q.q) + "</b><span>Answer: " + esc(m.q.a) + '</span><span class="muted">' + esc(m.q.e) + "</span></div>").join("") + "</div>";
+    } else html += '<p>Nobody missed a single question. "Accumulate, accumulate!"</p>';
+    html += '<div class="row" style="justify-content:flex-start"><button class="btn primary" id="again">Play again</button><button class="btn" id="newp">Change players</button></div></div>';
+    G.el.innerHTML = html;
+    $("#again").onclick = start;
+    $("#newp").onclick = renderSetup;
+  }
+
+  renderSetup();
+})();
+</script>
